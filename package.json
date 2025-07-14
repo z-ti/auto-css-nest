@@ -1,0 +1,72 @@
+{
+  "name": "auto-css-nest",
+  "displayName": "AutoCSS Nest",
+  "description": "Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/etc.), with customizable output formats and styling rules.",
+  "version": "0.0.1",
+  "repository": "https://github.com/z-ti/auto-css-nest",
+  "publisher": "flyfox",
+  "author": "flyfox",
+  "engines": {
+    "vscode": "^1.3.0"
+  },
+  "type": "module",
+  "keywords": [
+    "css",
+    "css extraction",
+    "dom analysis",
+    "sass",
+    "sass generation",
+    "automated style generation",
+    "nest",
+    "nest css generator",
+    "auto css nest"
+  ],
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "icon": "images/css.png",
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "auto-css-nest.classExtractor",
+        "title": "Extract Class Structure to Sass"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+shift+i",
+        "command": "auto-css-nest.classExtractor"
+      }
+    ]
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.0.0",
+    "@vue/compiler-dom": "^3.3.4",
+    "cross-env": "^7.0.3",
+    "parse5": "^7.1.2",
+    "rollup": "^3.28.1",
+    "rollup-plugin-copy": "^3.5.0",
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "htmlparser2": "^9.0.1"
+  }
+}

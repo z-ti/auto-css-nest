@@ -1,0 +1,15 @@
+.vscode/**
+.vscode-test/**
+test/**
+.gitignore
+.yarnrc
+**/.vscode-test.*
+**/jsconfig.json
+**/*.map
+**/*.txt
+**/.eslintrc.json
+node_modules
+src/**
+package-lock.json
+tsconfig.json
+rollup.config.js
