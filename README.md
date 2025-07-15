@@ -1,4 +1,4 @@
-# auto-css-nest README
+# auto-css-nest
 
 Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/etc.), with customizable output formats and styling rules.
 

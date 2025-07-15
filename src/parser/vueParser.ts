@@ -44,9 +44,9 @@ function extractClasses(node: any): string[] {
     classes = classes.concat(staticClass.value.content.split(/\s+/));
   }
   
-  // 动态 class
+  // 动态 class 如： v-bind:class="'content'"  :class="['content']"  :class="'content'"  :class="{'container5': true}"
   const dynamicClass = node.props?.find(
-    (p: any) => (p.name === ':class' || p.name === 'v-bind:class') && p.exp
+    (p: any) => (p.rawName === ':class' || p.rawName === 'v-bind:class') && p.exp
   );
   
   if (dynamicClass?.exp?.content) {
@@ -55,6 +55,20 @@ function extractClasses(node: any): string[] {
     if (literalMatch) {
       const literal = literalMatch[1] || literalMatch[2] || literalMatch[3];
       classes = classes.concat(literal.split(/\s+/));
+    }
+  }
+
+  // 动态 v-bind对象 如： v-bind="{class: 'content'}"  
+  const dynamicBindClass = node.props?.find(
+    (p: any) => (p.rawName === 'v-bind') && p.exp
+  );
+  
+  if (dynamicBindClass?.exp?.content) {
+    // 简单处理：提取字符串字面量
+    const literalBindMatch = dynamicBindClass.exp.content.match(/class:\s*['"`]([^'"`]+)['"`]/);
+    if (literalBindMatch) {
+      const literalBind = literalBindMatch[1];
+      classes = classes.concat(literalBind.split(/\s+/));
     }
   }
   
