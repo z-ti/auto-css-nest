@@ -4,9 +4,27 @@ import typescript from '@rollup/plugin-typescript';
 import json from '@rollup/plugin-json';
 import terser from '@rollup/plugin-terser';
 import copy from 'rollup-plugin-copy';
+import path from 'path';
+import fs from 'fs';
 
 // 是否生产模式
 const isProduction = process.env.NODE_ENV === 'production';
+
+const dynamicPackageJson = () => ({
+  name: 'dynamic-package-json',
+  buildStart() {
+    // 在每次构建开始时读取最新 package.json
+    this.addWatchFile(path.resolve('package.json'));
+  },
+  generateBundle() {
+    const pkgPath = path.resolve('package.json');
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    delete pkg.type;
+    const outPath = path.join('out', 'package.json');
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+    fs.writeFileSync(outPath, JSON.stringify(pkg, null, 2));
+  }
+});
 
 export default {
   input: 'src/extension.ts', // 入口文件
@@ -39,19 +57,11 @@ export default {
 
     // 生产环境下压缩代码
     isProduction && terser(),
-
-    // 复制 package.json 到输出目录
+    // 动态生成 package.json 内容
+    dynamicPackageJson(),
+    // 复制 README.md 到输出目录
     copy({
       targets: [
-        {
-          src: 'package.json',
-          dest: 'out',
-          transform: (content) => {
-            const pkg = JSON.parse(content);
-            delete pkg.type;
-            return JSON.stringify(pkg, null, 2);
-          }
-        },
         { src: 'README.md', dest: 'out' }
       ]
     }),
@@ -70,7 +80,7 @@ export default {
 
   // 监听文件变化
   watch: {
-    include: 'src/**',
+    include: ['src/**', 'package.json'],
     exclude: 'node_modules/**'
   }
 };

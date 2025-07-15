@@ -40,7 +40,7 @@
     ],
     "keybindings": [
       {
-        "key": "ctrl+shift+i",
+        "key": "ctrl+shift+e",
         "command": "auto-css-nest.classExtractor"
       }
     ]
