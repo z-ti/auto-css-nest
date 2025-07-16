@@ -19,6 +19,9 @@ const dynamicPackageJson = () => ({
   generateBundle() {
     const pkgPath = path.resolve('package.json');
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    pkg.main = "./extension.js";
+    delete pkg.dependencies;
+    delete pkg.devDependencies;
     delete pkg.type;
     const outPath = path.join('out', 'package.json');
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
@@ -62,7 +65,10 @@ export default {
     // 复制 README.md 到输出目录
     copy({
       targets: [
-        { src: 'README.md', dest: 'out' }
+        { src: 'README.md', dest: 'out' },
+        { src: 'LICENSE', dest: 'out' },
+        { src: 'images', dest: 'out' },
+        { src: '.vscodeignore', dest: 'out' },
       ]
     }),
   ],
@@ -70,12 +76,8 @@ export default {
   // 外部依赖 - 这些模块不会被打包
   external: [
     'vscode',
-    '@vue/compiler-dom',
-    'parse5',
-    'htmlparser2',
     'fs',
-    'path',
-    'util'
+    'path'
   ],
 
   // 监听文件变化

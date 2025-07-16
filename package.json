@@ -48,7 +48,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "cross-env NODE_ENV=production rollup -c",
-    "package": "vsce package --no-dependencies"
+    "package": "vsce package"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
@@ -58,15 +58,14 @@
     "@rollup/plugin-typescript": "^11.1.2",
     "@types/node": "20.x",
     "@types/vscode": "^1.0.0",
-    "@vue/compiler-dom": "^3.3.4",
     "cross-env": "^7.0.3",
-    "parse5": "^7.1.2",
     "rollup": "^3.28.1",
     "rollup-plugin-copy": "^3.5.0",
     "tslib": "^2.6.1",
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "htmlparser2": "^9.0.1"
+    "@vue/compiler-dom": "^3.3.4",
+    "parse5": "^7.1.2"
   }
 }
