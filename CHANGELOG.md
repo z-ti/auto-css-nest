@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "myextension" extension will be documented in this file.
+## v0.0.1
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- 支持 HTML 和 Vue 静态 class 提取
+- 基本 Sass 嵌套生成功能
+- 提供快捷键和右键菜单两种操作方式
