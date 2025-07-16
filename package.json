@@ -43,7 +43,16 @@
         "key": "ctrl+shift+e",
         "command": "auto-css-nest.classExtractor"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "auto-css-nest.classExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@1"
+        }
+      ]
+    }
   },
   "scripts": {
     "dev": "rollup -c -w",
