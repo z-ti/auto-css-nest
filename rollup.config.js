@@ -66,6 +66,7 @@ export default {
     copy({
       targets: [
         { src: 'README.md', dest: 'out' },
+        { src: 'CHANGELOG.md', dest: 'out' },
         { src: 'LICENSE', dest: 'out' },
         { src: 'images', dest: 'out' },
         { src: '.vscodeignore', dest: 'out' },
