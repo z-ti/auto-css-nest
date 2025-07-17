@@ -11,6 +11,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -18,13 +25,13 @@ jobs:
           node-version: 22
           cache: 'pnpm'
 
-      - name: Install PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
+
+      - name: Install vsce globally
+        run: |
+          pnpm add -g vsce
+          vsce --version
 
       - name: Build Extension
         run: pnpm run build
@@ -38,10 +45,13 @@ jobs:
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
-          npx vsce publish --packagePath *.vsix -p $VSCE_PAT
+          VSIX_FILE=$(ls -t out/*.vsix | head -1)
+          echo "Publishing version: ${{ github.ref_name }}"
+          echo "Publishing file: $VSIX_FILE"
+          npx vsce publish --packagePath "$VSIX_FILE" -p $VSCE_PAT
 
       - name: Upload VSIX as Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: extension-package
-          path: '*.vsix'
+          path: 'out/*.vsix'
