@@ -13,7 +13,7 @@ Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to
 
 - 🚀 **One-Click Conversion** : Directly generate Sass nested structures from selected template code
 - 💡 **Intelligent Parsing** : Supports HTML and Vue templates (including static and dynamic classes)
-- 🧩 **Nested Structures** : Automatically generate nested selectors that conform to Sass specifications
+- 🧩 **Nested Structures** : Automatically Generate Sass-Compliant Nested Selectors or Flattened CSS Structures
 - ⚙️ **Multi-Scenario Support** : Provides two operation methods: shortcut keys and context menu
 
 ## Usage
@@ -27,6 +27,14 @@ Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to
 - 2.Select a code snippet containing classes, right-click and select "Extract Class Structure to Sass" from the context menu to automatically generate Sass code. An example is shown below:
 
 ![Right Click Menu](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot2.gif)
+
+- 3.Select a code snippet containing classes, use the shortcut [ctrl+shift+t], choose the output format, and the CSS structure will be automatically generated and opened in a new tab. An example is shown below:
+
+![Shortcut Keys](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot3.gif)
+
+- 4.‌Select a code snippet containing classes, right-click and choose "Extract Class Structure to CSS", select the output format, and the CSS code will be automatically generated. An example is shown below:
+
+![Right Click Menu](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot4.gif)
 
 ## Issues
 
