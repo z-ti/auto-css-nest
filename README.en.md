@@ -7,7 +7,7 @@ English | [简体中文](./README.md)
 
 ## Introduction
 
-Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/CSS/etc.), with customizable output formats and styling rules.
+Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/CSS/Stylus/etc.), with customizable output formats and styling rules.
 
 ## Features
 
@@ -18,6 +18,7 @@ Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to
   - Generate Sass nesting with ‌&‌ symbol connectors‌
   - Generate CSS rules with parent-child relationships‌
   - Generate flat single-layer CSS structures‌
+  - Generate Stylus-compliant nested selectors‌
 - 🎨 **Multi-Scenario Support** : Provides two operation methods: shortcut keys and context menu
 
 ## Usage
@@ -45,6 +46,14 @@ Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to
 - 2.‌Select a code snippet containing classes, right-click and choose "Extract Class Structure to CSS", select the output format, and the CSS code will be automatically generated. An example is shown below:
 
 ![Right Click Menu](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot4.gif)
+
+### Extract Class to Generate Stylus Nested Structures
+
+- 1.Select a code snippet containing classes, use the shortcut [ctrl+shift+l], choose the output format, and the Stylus structure will be automatically generated and opened in a new tab. An example is shown below:
+
+![Shortcut Keys](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot6.gif)
+
+- 2.‌Select a code snippet containing classes, right-click and choose "Extract Class Structure to Stylus", select the output format, and the Stylus code will be automatically generated.
 
 ## Issues
 

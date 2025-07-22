@@ -7,7 +7,7 @@
 
 ## 功能简介
 
-Auto CSS Nest 是一个强大的 VS Code 插件，它能自动从选定的 HTML 或 Vue 模板代码中提取 class 结构，并生成符合 Sass 规范的嵌套代码或普通 CSS 结构。无需手动编写复杂的嵌套关系，一键生成整洁、可维护的样式代码。
+Auto CSS Nest 是一个强大的 VS Code 插件，它能自动从选定的 HTML 或 Vue 模板代码中提取 class 结构，并生成符合 Sass/Stylus 规范的嵌套代码或普通 CSS 结构。无需手动编写复杂的嵌套关系，一键生成整洁、可维护的样式代码。
 
 ## 功能特性
 
@@ -18,6 +18,7 @@ Auto CSS Nest 是一个强大的 VS Code 插件，它能自动从选定的 HTML 
   - 生成使用 & 符号连接的 Sass 嵌套
   - 生成带父子关系的 CSS 规则
   - 生成单一平铺的 CSS 结构
+  - 生成符合 Stylus 规范的嵌套选择器
 - 🎨 **多场景支持** : 提供快捷键和右键菜单两种操作方式
 
 ## 使用方法
@@ -45,6 +46,14 @@ Auto CSS Nest 是一个强大的 VS Code 插件，它能自动从选定的 HTML 
 - 2.选择一段包含 class 的代码，右键菜单-选择 "Extract Class Structure to CSS"，选择输出格式，将自动生成 CSS 代码。示例如下图：
 
 ![Right Click Menu](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot4.gif)
+
+### 提取 class 生成 Stylus 结构
+
+- 1.选择一段包含 class 的代码，使用快捷键[ctrl+shift+l]，选择输出格式，将自动生成 Stylus 结构并在新标签页打开。示例如下图：
+
+![Shortcut Keys](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot6.gif)
+
+- 2.选择一段包含 class 的代码，右键菜单-选择 "Extract Class Structure to Stylus"，选择输出格式，将自动生成 Stylus 代码。
 
 ## 问题
 

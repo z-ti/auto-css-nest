@@ -64,6 +64,34 @@ export function generateBemShorthandSass(root: ClassNode, indentLevel = 0, paren
   return output;
 }
 
+// 生成Stylus
+export function generateStylusNesting(root: ClassNode, indentLevel = 0, appearedCls = new Set<string>()): string {
+  let output = '';
+  const indent = '  '.repeat(indentLevel);
+  for (let i = 0, len = root.children.length; i < len; i++) {
+    const node = root.children[i];
+    if (node.classes.length > 0) {
+      // 过滤掉当前层级已处理的类名
+      const uniqueClasses = node.classes.filter(cls => !appearedCls.has(cls));
+      
+      if (uniqueClasses.length > 0) {
+        uniqueClasses.forEach(cls => appearedCls.add(cls));
+        
+        const selectors = uniqueClasses.map(c => `.${c}`).join(', ');
+        
+        output += `${indent}${selectors} \n\n`;
+        output += generateStylusNesting(node, indentLevel + 1, appearedCls);
+      } else {
+        output += generateStylusNesting(node, indentLevel, appearedCls);
+      }
+    } else {
+      output += generateStylusNesting(node, indentLevel, appearedCls);
+    }
+  }
+  
+  return output;
+}
+
 // 生成CSS: 带父子层级关系
 export function generateHierarchicalCss(root: ClassNode): string {
   const rules: string[] = [];

@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 import { parseHTML } from './parser/htmlParser';
 import { parseVueTemplate } from './parser/vueParser';
-import { generateSassNesting, generateBemShorthandSass, generateClassStructure, generateHierarchicalCss, hasClassAttributes } from './utils/astUtils';
+import { generateSassNesting, generateBemShorthandSass, generateStylusNesting, generateClassStructure, generateHierarchicalCss, hasClassAttributes } from './utils/astUtils';
 
 /**
  * 插件激活时调用此方法
@@ -106,9 +106,49 @@ function activate(context: vscode.ExtensionContext) {
       vscode.window.showErrorMessage(`提取class结构失败: ${error.message}`);
     }
   });
+  // 生成 Stylus 结构
+  const stylusExtractor = vscode.commands.registerCommand('auto-css-nest.stylusExtractor', function () {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showErrorMessage('编辑器不可用!');
+      return;
+    }
 
-  context.subscriptions.push(sassExtractor);
-  context.subscriptions.push(cssExtractor);
+    const selection = editor.selection;
+    const selectedText = editor.document.getText(selection);
+    
+    // 检查是否包含 class 属性
+    if (!hasClassAttributes(selectedText)) {
+      vscode.window.showWarningMessage('选中的代码不包含可提取的class属性');
+      return;
+    }
+
+    try {
+      // 根据文件类型选择合适的解析器
+      const languageId = editor.document.languageId;
+      const classTree = languageId === 'vue' 
+        ? parseVueTemplate(selectedText) 
+        : parseHTML(selectedText);
+      // 生成 Stylus 嵌套结构
+      let output = generateStylusNesting(classTree);
+      
+      // 创建新文档显示结果
+      vscode.workspace.openTextDocument({
+        content: output,
+        language: 'stylus'
+      }).then(doc => {
+        vscode.window.showTextDocument(doc);
+      });
+      
+      vscode.window.showInformationMessage('class 提取成功!');
+    } catch (error: any) {
+      vscode.window.showErrorMessage(`提取class结构失败: ${error.message}`);
+    }
+  });
+
+  // context.subscriptions.push(sassExtractor);
+  // context.subscriptions.push(cssExtractor);
+  [].push.apply(context.subscriptions, [sassExtractor, cssExtractor, stylusExtractor]);
 }
 
 // 插件卸载时调用此方法

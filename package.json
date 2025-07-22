@@ -2,7 +2,7 @@
   "name": "auto-css-nest",
   "displayName": "Auto CSS Nest",
   "description": "Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/etc.), with customizable output formats and styling rules.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": "https://github.com/z-ti/auto-css-nest",
   "publisher": "flyfox",
   "author": "flyfox",
@@ -16,6 +16,9 @@
     "dom analysis",
     "sass",
     "sass generation",
+    "scss",
+    "less",
+    "stylus",
     "automated style generation",
     "nest",
     "nest css generator",
@@ -40,6 +43,10 @@
       {
         "command": "auto-css-nest.cssExtractor",
         "title": "Extract Class Structure to CSS"
+      },
+      {
+        "command": "auto-css-nest.stylusExtractor",
+        "title": "Extract Class Structure to Stylus"
       }
     ],
     "keybindings": [
@@ -50,6 +57,10 @@
       {
         "key": "ctrl+shift+t",
         "command": "auto-css-nest.cssExtractor"
+      },
+      {
+        "key": "ctrl+shift+l",
+        "command": "auto-css-nest.stylusExtractor"
       }
     ],
     "menus": {
@@ -61,6 +72,11 @@
         },
         {
           "command": "auto-css-nest.cssExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@1"
+        },
+        {
+          "command": "auto-css-nest.stylusExtractor",
           "when": "editorHasSelection",
           "group": "AutoCSSNest@1"
         }
