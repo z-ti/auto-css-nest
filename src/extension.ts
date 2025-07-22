@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 import { parseHTML } from './parser/htmlParser';
 import { parseVueTemplate } from './parser/vueParser';
-import { generateSassNesting, generateClassStructure, generateHierarchicalCss, hasClassAttributes } from './utils/astUtils';
+import { generateSassNesting, generateBemShorthandSass, generateClassStructure, generateHierarchicalCss, hasClassAttributes } from './utils/astUtils';
 
 /**
  * 插件激活时调用此方法
@@ -33,13 +33,15 @@ function activate(context: vscode.ExtensionContext) {
       const classTree = languageId === 'vue' 
         ? parseVueTemplate(selectedText) 
         : parseHTML(selectedText);
-      console.log('结构::', classTree);
+      const { bem } = vscode.workspace.getConfiguration('nest')
+      console.log('bem::', bem)
       // 生成 Sass 嵌套结构
-      const sassOutput = generateSassNesting(classTree);
+      let generateFn = bem ? generateBemShorthandSass : generateSassNesting;
+      let output = generateFn(classTree);
       
       // 创建新文档显示结果
       vscode.workspace.openTextDocument({
-        content: sassOutput,
+        content: output,
         language: 'scss'
       }).then(doc => {
         vscode.window.showTextDocument(doc);
@@ -88,7 +90,6 @@ function activate(context: vscode.ExtensionContext) {
         } else {
           cssOutput = generateClassStructure(classTree);
         }
-        console.log(cssOutput);
         
         // 创建新文档显示结果
         vscode.workspace.openTextDocument({
