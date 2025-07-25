@@ -1,8 +1,46 @@
 import * as vscode from 'vscode';
+import { BASE_COMMAND } from './constants';
+
+const global = vscode.window;
 
 export function hasClassAttributes(code: string): boolean {
   return /(^|\s)(class|:class|v-bind:class)\s*=/.test(code);
 }
+
+export const message = (() => {
+  const msgMap = {
+      success: 'showInformationMessage',
+      info: 'showInformationMessage',
+      error: 'showErrorMessage',
+      warning: 'showWarningMessage'
+  };
+  let msg = Object.create(null);
+  for (const key in msgMap) {
+      // @ts-ignore
+      msg[key] = (...args) => global[msgMap[key]](...args);
+  }
+  return msg;
+})();
+
+export const quickPick = (options: vscode.QuickPickItem[]): Promise<vscode.QuickPickItem> => {
+  return new Promise((resolve, reject) => {
+    global
+      .showQuickPick(options)
+      .then((res) => {
+          resolve(res);
+      }) // @ts-ignore
+      .catch(reject);
+  });
+};
+
+export const installCommands = (types: string[], method: Function) => {
+  return types.map((type) => {
+      const command = `${BASE_COMMAND}.${type}Extractor`;
+      return vscode.commands.registerCommand(command, () => {
+          method.call(null, type);
+      });
+  });
+};
 
 export async function injectStylesToVue(document: vscode.TextDocument, styleCode: string, editor: vscode.TextEditor, insertStyleLang = 'scss') {
   const fullText = document.getText();
