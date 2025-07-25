@@ -165,7 +165,3 @@ function convertToBemShorthand(className: string, parentBlock: string): string {
   
   return `.${className}`;
 }
-
-export function hasClassAttributes(code: string): boolean {
-  return /(^|\s)(class|:class|v-bind:class)\s*=/.test(code);
-}
