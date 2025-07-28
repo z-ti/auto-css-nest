@@ -2,7 +2,7 @@
   "name": "auto-css-nest",
   "displayName": "Auto CSS Nest",
   "description": "Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/etc.), with customizable output formats and styling rules.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "repository": "https://github.com/z-ti/auto-css-nest",
   "publisher": "flyfox",
   "author": "flyfox",
@@ -51,6 +51,14 @@
       {
         "command": "auto-css-nest.lessExtractor",
         "title": "Extract Class Structure to Less"
+      },
+      {
+        "command": "auto-css-nest.copyExtractor",
+        "title": "Convert and Copy to clipboard"
+      },
+      {
+        "command": "auto-css-nest.pasteExtractor",
+        "title": "Translate clipboard content and Paste"
       }
     ],
     "keybindings": [
@@ -69,6 +77,14 @@
       {
         "key": "ctrl+shift+s",
         "command": "auto-css-nest.lessExtractor"
+      },
+      {
+        "key": "ctrl+shift+c",
+        "command": "auto-css-nest.copyExtractor"
+      },
+      {
+        "key": "ctrl+shift+v",
+        "command": "auto-css-nest.pasteExtractor"
       }
     ],
     "menus": {
@@ -92,33 +108,57 @@
           "command": "auto-css-nest.lessExtractor",
           "when": "editorHasSelection",
           "group": "AutoCSSNest@1"
+        },
+        {
+          "command": "auto-css-nest.copyExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@2"
+        },
+        {
+          "command": "auto-css-nest.pasteExtractor",
+          "group": "AutoCSSNest@2"
         }
       ]
     },
     "configuration": {
-			"type": "object",
-			"title": "nest configure",
-			"properties": {
-					"nest.bem": {
-						"type": "boolean",
-						"default": false,
-            "scope": "application",
-						"description": "使用&符号实现Sass/Less的嵌套生成"
-					},
-          "nest.insertBottom": {
-						"type": "boolean",
-						"default": false,
-            "scope": "application",
-						"description": "将生成的样式自动注入到Vue文件末端的<style>标签中"
-					},
-          "nest.vueStyleScoped": {
-            "type": "boolean",
-            "default": true,
-            "scope": "application",
-            "description": "注入的样式是否添加 scoped 属性（仅在启用注入时生效）"
-          }
-			}
-		}
+      "type": "object",
+      "title": "nest configure",
+      "properties": {
+        "nest.bem": {
+          "type": "boolean",
+          "default": false,
+          "scope": "application",
+          "description": "使用&符号实现Sass/Less的嵌套生成"
+        },
+        "nest.insertBottom": {
+          "type": "boolean",
+          "default": false,
+          "scope": "application",
+          "description": "将生成的样式自动注入到Vue文件末端的<style>标签中"
+        },
+        "nest.vueStyleScoped": {
+          "type": "boolean",
+          "default": true,
+          "scope": "application",
+          "description": "注入的样式是否添加 scoped 属性（仅在启用注入时生效）"
+        },
+        "nest.clipboardFormat‌": {
+          "type": "string",
+          "enum": [
+            "Sass",
+            "Less",
+            "Stylus",
+            "Sass &",
+            "Less &",
+            "CSS with Parent-Child",
+            "CSS with Single Layer"
+          ],
+          "default": "Sass",
+          "scope": "application",
+          "description": "剪切版交互模式下的生成结构"
+        }
+      }
+    }
   },
   "scripts": {
     "dev": "rollup -c -w",

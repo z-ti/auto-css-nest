@@ -24,6 +24,7 @@ Auto CSS Nest 是一个强大的 VSCode 插件，它能自动从选定的 HTML �
   - 支持选择后，执行`快捷键`提取 class 并生成结构
   - 支持选择后，点击`右键菜单`提取 class 并生成结构
   - 支持选择后，生成的结构`直接注入`到 Vue 文件末端
+  - 支持选择后，生成的结构存入剪贴板，用户可在目标位置直接`Ctrl+V`粘贴使用
 
 ## 使用方法
 
@@ -69,6 +70,14 @@ Auto CSS Nest 是一个强大的 VSCode 插件，它能自动从选定的 HTML �
 - 1.在插件设置中勾选`将生成的样式自动注入到Vue文件末端的<style>标签中`，如果同时勾选`注入的样式是否添加 scoped 属性`, 在 Vue 文件末端生成代码结构后，会给`<style>`标签添加 scoped 属性。示例如下图：
 
 ![Auto Insert](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot7.gif)
+
+### 剪切板交互模式
+
+- 1.`自动注入到Vue末端`不能满足用户想在目标位置直接使用的需求。那么基于剪切板的模式就完美解决了这个问题。选中目标代码片段后，执行快捷键[ctrl+shift+c], 然后提取到的 class 就转换成 sass 结构(可在配置中选择其他格式)，转换结果将自动存入剪贴板，用户在需要目标编辑位置 Ctrl+V 粘贴就可以了。示例如下图：
+
+![Clipboard](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot8.gif)
+
+- 2.对于外部代码的样式提取场景：当用户在 VSCode 外复制代码时，需先执行 Ctrl+C 复制到剪贴板；返回编辑器后，在目标位置使用[ctrl+shift+v]组合键，插件将自动完成 class 的提取, 并将转化后的 sass 结构粘贴。
 
 ## 问题
 

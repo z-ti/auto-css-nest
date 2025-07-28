@@ -24,6 +24,7 @@ Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to
   - Supports extracting classes and generating structure after selection via hotkey
   - Supports extracting classes and generating structure after selection via right-click menu
   - Supports direct injection of the generated structure at the end of the Vue file after selection
+  - Supports generating the structure to clipboard after selection, allowing direct Ctrl+V paste at target location.
 
 ## Usage
 
@@ -70,6 +71,14 @@ Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to
 - 1.In the plugin settings, check ‌Automatically inject generated styles into the `<style>` tag at the end of Vue files‌. If you also enable ‌Add scoped attribute to injected styles‌, the generated code structure at the end of the Vue file will include the scoped attribute in the `<style>` tag. Example shown below:
 
 ![Auto Insert](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot7.gif)
+
+### Clipboard Interaction Mode
+
+- 1.The 'auto-injection at Vue file end' approach fails to meet users' need for direct placement control. The clipboard-based method perfectly solves this issue. After selecting the target code snippet, execute the shortcut [ctrl+shift+c]. The extracted classes will be converted to Sass structure (other formats configurable), with the transformed result automatically saved to clipboard. Users can then simply paste (Ctrl+V) at any desired editing location. Example shown below:
+
+![Clipboard](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot8.gif)
+
+- 2.For external code style extraction scenarios: When users copy code outside VSCode, they must first execute Ctrl+C to copy it to the clipboard. Upon returning to the editor, use the [ctrl+shift+v] key combination at the target location. The plugin will automatically handle both class extraction and pasting of the converted Sass structure.
 
 ## Issues
 
