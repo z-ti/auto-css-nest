@@ -1,0 +1,31 @@
+#root {
+  width:100%;
+  height:100%;
+}
+
+.container{
+  width:100%;
+  height:100%;
+}
+.container-border{
+  border:1px solid var(--vscode-textBlockQuote-border);
+  height:40rem;
+  margin-right:2rem;
+  padding:1rem;
+  border-radius:1rem;
+  text-align: left;
+}
+.trans-button{
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+}
+.ant-radio-label{
+  color: var(--vscode-breadcrumb-foreground); 
+}
+.ant-radio-wrapper-checked .ant-radio-label{
+  color: var(--vscode-tab-activeForeground);
+}
+.ant-typography{
+  color: var(--vscode-breadcrumb-foreground)!important; 
+}

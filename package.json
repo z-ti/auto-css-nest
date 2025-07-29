@@ -36,23 +36,49 @@
       {
         "command": "auto-css-nest.classExtractor",
         "title": "Extract Class Structure to Sass"
+      },
+      {
+        "command": "auto-css-nest.previewInWebview",
+        "title": "Preview In Webview",
+        "category": "Auto CSS Nest"
       }
     ],
     "keybindings": [
       {
         "key": "ctrl+shift+e",
         "command": "auto-css-nest.classExtractor"
+      },
+      {
+        "key": "ctrl+shift+w",
+        "command": "auto-css-nest.previewInWebview"
       }
     ],
     "menus": {
       "editor/context": [
         {
+          "submenu": "auto-css-nest.submenu",
+          "group": "AutoCSSNest@1",
+          "when": "editorHasSelection"
+        }
+      ],
+      "auto-css-nest.submenu": [
+        {
           "command": "auto-css-nest.classExtractor",
-          "when": "editorHasSelection",
-          "group": "AutoCSSNest@1"
+          "group": "1_primary"
+        },
+        {
+          "command": "auto-css-nest.previewInWebview",
+          "group": "2_preview"
         }
       ]
-    }
+    },
+    "submenus": [
+      {
+        "id": "auto-css-nest.submenu",
+        "label": "Auto CSS Nest",
+        "icon": "$(css)"
+      }
+    ]
   },
   "scripts": {
     "dev": "rollup -c -w",

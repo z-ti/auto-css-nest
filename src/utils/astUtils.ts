@@ -23,3 +23,7 @@ export function generateSassNesting(root: ClassNode, indentLevel = 0): string {
 export function hasClassAttributes(code: string): boolean {
   return /(^|\s)(class|:class|v-bind:class)\s*=/.test(code);
 }
+
+export function getWebviewContent() { 
+  return 
+}
