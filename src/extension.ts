@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import { parseHTML } from './parser/htmlParser';
 import { parseVueTemplate } from './parser/vueParser';
+import { parseJSX } from './parser/reactParser';
 import { generateSassNesting, generateBemShorthandSass, generateStylusNesting, generateClassStructure, generateHierarchicalCss } from './utils/astUtils';
 import { message, quickPick, installCommands, hasClassAttributes, detectCodeType, injectStylesToVue } from './utils/shared'
 import { STYLE_LANG_TYPES, CLIPBOARD_TYPES } from './utils/constants';
@@ -25,9 +26,16 @@ const extractorFn = async (styleLang: typeof STYLE_LANG_TYPES[number]) => {
   try {
     // 根据文件类型选择合适的解析器
     const languageId = document.languageId;
-    const classTree = languageId === 'vue' 
-      ? parseVueTemplate(selectedText) 
-      : parseHTML(selectedText);
+    const parseFnMap = {
+      'htm': parseHTML,
+      'html': parseHTML,
+      'vue': parseVueTemplate,
+      'javascript': parseJSX,
+      'javascriptreact': parseJSX,
+      'typescriptreact': parseJSX
+    };
+    const parseFn = parseFnMap[languageId] || parseHTML;
+    const classTree = parseFn(selectedText);
     const { bem, insertBottom } = vscode.workspace.getConfiguration('nest');
     // 生成 嵌套结构
     let generateFn;
@@ -104,9 +112,17 @@ const clipboardFn = async (mode: typeof CLIPBOARD_TYPES[number]) => {
       return message.warning('选中的代码不包含可提取的class属性');
     }
     // 根据文件类型选择合适的解析器
-    const classTree = languageId === 'vue' 
-      ? parseVueTemplate(selectedText) 
-      : parseHTML(selectedText);
+    const parseFnMap = {
+      'htm': parseHTML,
+      'html': parseHTML,
+      'vue': parseVueTemplate,
+      'javascript': parseJSX,
+      'react': parseJSX,
+      'javascriptreact': parseJSX,
+      'typescriptreact': parseJSX
+    };
+    const parseFn = parseFnMap[languageId] || parseHTML;
+    const classTree = parseFn(selectedText);
     const { clipboardFormat‌ } = vscode.workspace.getConfiguration('nest');
     // 生成 嵌套结构
     let generateFn;

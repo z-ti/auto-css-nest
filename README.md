@@ -7,12 +7,12 @@
 
 ## 功能简介
 
-Auto CSS Nest 是一个强大的 VSCode 插件，它能自动从选定的 HTML 或 Vue 模板代码中提取 class 结构，并生成符合 Sass/Less/Stylus 规范的嵌套代码或普通 CSS 结构。无需手动编写复杂的嵌套关系，一键生成整洁、可维护的样式代码。
+Auto CSS Nest 是一个强大的 VSCode 插件，它能自动从选定的 HTML、React 或 Vue 模板代码中提取 class 结构，并生成符合 Sass/Less/Stylus 规范的嵌套代码或普通 CSS 结构。无需手动编写复杂的嵌套关系，一键生成整洁、可维护的样式代码。
 
 ## 功能特性
 
 - 🚀 **一键转换** : 从选定的模板代码提取 class 直接生成 Sass 嵌套结构或 CSS 结构
-- 💡 **智能解析** : 支持 HTML 和 Vue 模板（包括静态 class）
+- 💡 **智能解析** : 支持 HTML、React 和 Vue 模板（包括静态 class）
 - 🧩 **多种输出格式** :
   - 生成符合 Sass 规范的嵌套选择器
   - 生成符合 Less 规范的嵌套选择器
@@ -77,7 +77,9 @@ Auto CSS Nest 是一个强大的 VSCode 插件，它能自动从选定的 HTML �
 
 ![Clipboard](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot8.gif)
 
-- 2.对于外部代码的样式提取场景：当用户在 VSCode 外复制代码时，需先执行 Ctrl+C 复制到剪贴板；返回编辑器后，在目标位置使用[ctrl+shift+v]组合键，插件将自动完成 class 的提取, 并将转化后的 sass 结构粘贴。
+- 2.对于外部代码的样式提取场景：当用户在 VSCode 外复制代码时，需先执行 Ctrl+C 复制到剪贴板；返回编辑器后，在目标位置使用[ctrl+shift+v]组合键，插件将自动完成 class 的提取, 并将转化后的 sass 结构粘贴。示例如下图：
+
+![Clipboard](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot9.gif)
 
 ## 问题
 

@@ -9,5 +9,6 @@
     "rootDir": "src"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
+  "typeRooters": ["node_modules/@types", "src/types/global.d.ts"]
 }

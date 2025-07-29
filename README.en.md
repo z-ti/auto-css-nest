@@ -7,12 +7,12 @@ English | [简体中文](./README.md)
 
 ## Introduction
 
-Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/Less/Stylus/CSS/etc.), with customizable output formats and styling rules.
+Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/React/etc.) to instantly generate corresponding nested code (Sass/Less/Stylus/CSS/etc.), with customizable output formats and styling rules.
 
 ## Features
 
 - 🚀 **One-Click Conversion** : Extract classes from selected template code to directly generate Sass nested structures or CSS structures‌
-- 💡 **Intelligent Parsing** : Supports HTML and Vue templates (including static classes)
+- 💡 **Intelligent Parsing** : Supports HTML, React, and Vue templates (including static classes)
 - 🧩 **Multiple Output Formats** :
   - Generate Sass-compliant nested selectors‌
   - Generate Less-compliant nested selectors‌
@@ -78,7 +78,9 @@ Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to
 
 ![Clipboard](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot8.gif)
 
-- 2.For external code style extraction scenarios: When users copy code outside VSCode, they must first execute Ctrl+C to copy it to the clipboard. Upon returning to the editor, use the [ctrl+shift+v] key combination at the target location. The plugin will automatically handle both class extraction and pasting of the converted Sass structure.
+- 2.For external code style extraction scenarios: When users copy code outside VSCode, they must first execute Ctrl+C to copy it to the clipboard. Upon returning to the editor, use the [ctrl+shift+v] key combination at the target location. The plugin will automatically handle both class extraction and pasting of the converted Sass structure.Example shown below:
+
+![Clipboard](https://raw.githubusercontent.com/z-ti/auto-css-nest/main/images/screenshot9.gif)
 
 ## Issues
 

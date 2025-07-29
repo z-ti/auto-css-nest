@@ -5,7 +5,7 @@ import { CommandType, CodeType } from '../types/common';
 const global = vscode.window;
 
 export function hasClassAttributes(code: string): boolean {
-  return /(^|\s)(class|:class|v-bind:class)\s*=/.test(code);
+  return /(^|\s)(class|:class|v-bind:class|className)\s*=/.test(code);
 }
 
 export const message = (() => {
