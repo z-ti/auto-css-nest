@@ -2,7 +2,7 @@
   "name": "auto-css-nest",
   "displayName": "Auto CSS Nest",
   "description": "Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/React/etc.) to instantly generate corresponding nested code (Sass/etc.), with customizable output formats and styling rules.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "repository": "https://github.com/z-ti/auto-css-nest",
   "publisher": "flyfox",
   "author": "flyfox",
@@ -180,8 +180,6 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@babel/parser": "8.0.0-beta.0",
-    "@babel/traverse": "8.0.0-beta.0",
     "@vue/compiler-dom": "^3.3.4",
     "parse5": "^7.1.2"
   }
