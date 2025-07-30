@@ -1,8 +1,8 @@
 {
   "name": "auto-css-nest",
   "displayName": "Auto CSS Nest",
-  "description": "Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/etc.) to instantly generate corresponding nested code (Sass/etc.), with customizable output formats and styling rules.",
-  "version": "0.0.1",
+  "description": "Automated CSS Structure Generator: Simply select DOM snippets (HTML/Vue/React/etc.) to instantly generate corresponding nested code (Sass/etc.), with customizable output formats and styling rules.",
+  "version": "0.0.8",
   "repository": "https://github.com/z-ti/auto-css-nest",
   "publisher": "flyfox",
   "author": "flyfox",
@@ -16,6 +16,9 @@
     "dom analysis",
     "sass",
     "sass generation",
+    "scss",
+    "less",
+    "stylus",
     "automated style generation",
     "nest",
     "nest css generator",
@@ -34,27 +37,96 @@
   "contributes": {
     "commands": [
       {
-        "command": "auto-css-nest.classExtractor",
+        "command": "auto-css-nest.sassExtractor",
         "title": "Extract Class Structure to Sass"
       },
       {
-        "command": "auto-css-nest.previewInWebview",
+        "command": "auto-css-nest.previewExtractor",
         "title": "Preview In Webview",
         "category": "Auto CSS Nest"
+      },
+      {
+        "command": "auto-css-nest.cssExtractor",
+        "title": "Extract Class Structure to CSS"
+      },
+      {
+        "command": "auto-css-nest.stylusExtractor",
+        "title": "Extract Class Structure to Stylus"
+      },
+      {
+        "command": "auto-css-nest.lessExtractor",
+        "title": "Extract Class Structure to Less"
+      },
+      {
+        "command": "auto-css-nest.copyExtractor",
+        "title": "Convert and Copy to clipboard"
+      },
+      {
+        "command": "auto-css-nest.pasteExtractor",
+        "title": "Translate clipboard content and Paste"
       }
     ],
     "keybindings": [
       {
         "key": "ctrl+shift+e",
-        "command": "auto-css-nest.classExtractor"
+        "command": "auto-css-nest.sassExtractor"
+      },
+      {
+        "key": "ctrl+shift+t",
+        "command": "auto-css-nest.cssExtractor"
+      },
+      {
+        "key": "ctrl+shift+l",
+        "command": "auto-css-nest.stylusExtractor"
+      },
+      {
+        "key": "ctrl+shift+s",
+        "command": "auto-css-nest.lessExtractor"
+      },
+      {
+        "key": "ctrl+shift+c",
+        "command": "auto-css-nest.copyExtractor"
+      },
+      {
+        "key": "ctrl+shift+v",
+        "command": "auto-css-nest.pasteExtractor"
       },
       {
         "key": "ctrl+shift+w",
-        "command": "auto-css-nest.previewInWebview"
+        "command": "auto-css-nest.previewExtractor"
       }
     ],
     "menus": {
       "editor/context": [
+        {
+          "command": "auto-css-nest.sassExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@1"
+        },
+        {
+          "command": "auto-css-nest.cssExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@1"
+        },
+        {
+          "command": "auto-css-nest.stylusExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@1"
+        },
+        {
+          "command": "auto-css-nest.lessExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@1"
+        },
+        {
+          "command": "auto-css-nest.copyExtractor",
+          "when": "editorHasSelection",
+          "group": "AutoCSSNest@2"
+        },
+        {
+          "command": "auto-css-nest.pasteExtractor",
+          "group": "AutoCSSNest@2"
+        },
         {
           "submenu": "auto-css-nest.submenu",
           "group": "AutoCSSNest@1",
@@ -63,11 +135,7 @@
       ],
       "auto-css-nest.submenu": [
         {
-          "command": "auto-css-nest.classExtractor",
-          "group": "1_primary"
-        },
-        {
-          "command": "auto-css-nest.previewInWebview",
+          "command": "auto-css-nest.previewExtractor",
           "group": "2_preview"
         }
       ]
@@ -78,7 +146,46 @@
         "label": "Auto CSS Nest",
         "icon": "$(css)"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "nest configure",
+      "properties": {
+        "nest.bem": {
+          "type": "boolean",
+          "default": false,
+          "scope": "application",
+          "description": "使用&符号实现Sass/Less的嵌套生成"
+        },
+        "nest.insertBottom": {
+          "type": "boolean",
+          "default": false,
+          "scope": "application",
+          "description": "将生成的样式自动注入到Vue文件末端的<style>标签中"
+        },
+        "nest.vueStyleScoped": {
+          "type": "boolean",
+          "default": true,
+          "scope": "application",
+          "description": "注入的样式是否添加 scoped 属性（仅在启用注入时生效）"
+        },
+        "nest.clipboardFormat‌": {
+          "type": "string",
+          "enum": [
+            "Sass",
+            "Less",
+            "Stylus",
+            "Sass &",
+            "Less &",
+            "CSS with Parent-Child",
+            "CSS with Single Layer"
+          ],
+          "default": "Sass",
+          "scope": "application",
+          "description": "剪切版交互模式下的生成结构"
+        }
+      }
+    }
   },
   "scripts": {
     "dev": "rollup -c -w",

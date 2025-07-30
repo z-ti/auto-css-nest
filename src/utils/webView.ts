@@ -2,6 +2,11 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 
+import { parseHTML } from './../parser/htmlParser';
+import { parseVueTemplate } from './../parser/vueParser';
+import { parseJSX } from './../parser/reactParser';
+import { generateSassNesting, generateBemShorthandSass, generateStylusNesting, generateClassStructure, generateHierarchicalCss } from './../utils/astUtils';
+import { message, quickPick } from './../utils/shared'
 class SassPreviewPanel {
   public static currentPanel: SassPreviewPanel | undefined
   private readonly _panel: vscode.WebviewPanel
@@ -12,7 +17,7 @@ class SassPreviewPanel {
     panel: vscode.WebviewPanel,
     context: vscode.ExtensionContext,
     private domText: string,
-    private sassContent: string
+    private languageId: string
   ) {
     this._panel = panel
     this._context = context
@@ -27,24 +32,64 @@ class SassPreviewPanel {
     )
   }
 
-  private handleWebviewMessage(message: any) {
-    console.log(message, '接收到react中传过来的参数')
-    switch (message.command) {
-      case 'getParams':
-        // 当 Webview 请求参数时发送数据
-        this.sendParameters()
-        return
+  private async getSassContent(styleLang) { 
+    const languageId = this.languageId;
+    const parseFnMap = {
+      'htm': parseHTML,
+      'html': parseHTML,
+      'vue': parseVueTemplate,
+      'javascript': parseJSX,
+      'javascriptreact': parseJSX,
+      'typescriptreact': parseJSX
+    };
+    const parseFn = parseFnMap[languageId] || parseHTML;
+    const classTree = parseFn(this.domText);
+    const { bem, insertBottom } = vscode.workspace.getConfiguration('nest');
+    // 生成 嵌套结构
+    let generateFn;
+    if (['sass', 'less'].includes(styleLang)) {
+      generateFn = bem ? generateBemShorthandSass : generateSassNesting;
+    } else if (styleLang === 'css') {
+      const formatOptions: vscode.QuickPickItem[] = [
+        { label: 'CSS (层级结构)', description: '生成带父子层级关系的CSS' },
+        { label: 'CSS (平铺结构)', description: '生成单一的CSS结构' },
+      ];
+      const selected: vscode.QuickPickItem = await quickPick(formatOptions);
+      if (!selected) return message.warning('未选择输出格式');
+      generateFn = selected.label === 'CSS (层级结构)' ? generateHierarchicalCss : generateClassStructure;
+    } else if (styleLang === 'stylus') {
+      generateFn = generateStylusNesting;
     }
+    let output = generateFn(classTree);
+    return output
   }
 
-  private sendParameters() {
-    this._panel.webview.postMessage({
-      command: 'setParams',
-      params: {
-        domContent: this.domText,
-        sassContent: this.sassContent,
-      },
-    })
+  private handleWebviewMessage(message: any) {
+    console.log(message, '接收到react中传过来的参数')
+    this.sendParameters(message)
+  }
+
+  private async sendParameters(message:any) {
+    switch (message.command) {
+      case 'getDomContent':
+        this._panel.webview.postMessage({
+          command: 'setDomContent',
+          params: {
+            domContent: this.domText
+          },
+        })
+        return
+      case 'getSassContent':
+        const output = await this.getSassContent(message.cssType)
+        // 当 Webview 请求参数时发送数据
+        this._panel.webview.postMessage({
+          command: 'setSassContent',
+          params: {
+            sassContent: output
+          },
+        })
+        return
+    }
   }
 
   private _getWebviewContent(): string {
@@ -97,14 +142,14 @@ class SassPreviewPanel {
   public static createOrShow(
     context: vscode.ExtensionContext,
     domText: string,
-    sassContent: string
+    languageId: string
   ) {
     const column =
       vscode.window.activeTextEditor?.viewColumn || vscode.ViewColumn.Beside
 
     if (SassPreviewPanel.currentPanel) {
       SassPreviewPanel.currentPanel._panel.reveal(column)
-      SassPreviewPanel.currentPanel.update(domText, sassContent)
+      SassPreviewPanel.currentPanel.update(domText, languageId)
       return
     }
 
@@ -126,15 +171,14 @@ class SassPreviewPanel {
       panel,
       context,
       domText,
-      sassContent
+      languageId
     )
   }
 
-  public update(domText: string, sassContent: string) {
+  public update(domText: string, languageId:string) {
     this.domText = domText
-    this.sassContent = sassContent
+    this.languageId = languageId
     this._panel.webview.html = this._getWebviewContent()
-    this.sendParameters()
   }
 
   public dispose() {

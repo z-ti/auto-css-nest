@@ -13,12 +13,15 @@ const vscode = acquireVsCodeApi()
 
 function App() {
   const { Title } = Typography
-  const [cssType, setValue] = useState(1)
+  const [cssType, setValue] = useState('less')
   const onCssTypeChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
     setValue(e.target.value)
+    setSassPreContent('')
+  }
+
+  const handleTrans = () => {
     vscode.postMessage({
-      command: 'getParams',
+      command: 'getSassContent',
       cssType,
     })
   }
@@ -29,16 +32,17 @@ function App() {
   useEffect(() => {
     //首次默认向插件发送一次消息获取dom和生成sass
     vscode.postMessage({
-      command: 'getParams',
-      cssType,
+      command: 'getDomContent',
     })
 
     window.addEventListener('message', (event) => {
       const message = event.data
       switch (message.command) {
-        case 'setParams':
-          setSassPreContent(message.params.sassContent)
+        case 'setDomContent':
           setDomPreContent(message.params.domContent)
+          break
+        case 'setSassContent':
+          setSassPreContent(message.params.sassContent)
           break
       }
     })
@@ -57,7 +61,9 @@ function App() {
             </div>
           </Col>
           <Col span={2} className="trans-button">
-            <Button type="primary">转换</Button>
+            <Button type="primary" onClick={handleTrans}>
+              转换
+            </Button>
           </Col>
           <Col span={11}>
             <Title level={4}>生成的css</Title>

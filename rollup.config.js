@@ -71,7 +71,7 @@ export default {
         { src: 'images', dest: 'out' },
         { src: '.vscodeignore', dest: 'out' },
       ]
-    }),
+    })
   ],
 
   // 外部依赖 - 这些模块不会被打包

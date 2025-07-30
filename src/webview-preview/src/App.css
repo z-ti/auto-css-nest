@@ -9,8 +9,8 @@
 }
 .container-border{
   border:1px solid var(--vscode-textBlockQuote-border);
-  height:40rem;
-  margin-right:2rem;
+  height:80rem;
+  overflow-y: auto;
   padding:1rem;
   border-radius:1rem;
   text-align: left;

@@ -1,81 +1,207 @@
-import * as vscode from 'vscode'
-import { parseHTML } from './parser/htmlParser'
-import { parseVueTemplate } from './parser/vueParser'
-import { generateSassNesting, hasClassAttributes } from './utils/astUtils'
+
+import * as vscode from 'vscode';
+import { parseHTML } from './parser/htmlParser';
+import { parseVueTemplate } from './parser/vueParser';
+import { parseJSX } from './parser/reactParser';
+import { generateSassNesting, generateBemShorthandSass, generateStylusNesting, generateClassStructure, generateHierarchicalCss } from './utils/astUtils';
+import { message, quickPick, installCommands, hasClassAttributes, detectCodeType, injectStylesToVue } from './utils/shared'
+import { STYLE_LANG_TYPES, CLIPBOARD_TYPES, PREVIEW_WEBVIEW } from './utils/constants';
 import { SassPreviewPanel } from './utils/webView'
 
-/* 提取公共逻辑 */
-async function generateSass() {
-  const editor = vscode.window.activeTextEditor
+// 样式提取并处理
+const extractorFn = async (styleLang: typeof STYLE_LANG_TYPES[number]) => {
+  const editor = vscode.window.activeTextEditor;
   if (!editor) {
-    vscode.window.showErrorMessage('编辑器不可用!')
-    return null
+    return message.error('编辑器不可用!');
   }
 
-  const selection = editor.selection
-  const selectedText = editor.document.getText(selection)
-
+  const selection = editor.selection;
+  const document = editor.document;
+  const selectedText = document.getText(selection);
+  
+  // 检查是否包含 class 属性
   if (!hasClassAttributes(selectedText)) {
-    vscode.window.showWarningMessage('选中的代码不包含可提取的class属性')
-    return null
+    return message.warning('选中的代码不包含可提取的class属性');
   }
 
   try {
-    const languageId = editor.document.languageId
-    const classTree =
-      languageId === 'vue'
-        ? parseVueTemplate(selectedText)
-        : parseHTML(selectedText)
-    return generateSassNesting(classTree)
+    // 根据文件类型选择合适的解析器
+    const languageId = document.languageId;
+    const parseFnMap = {
+      'htm': parseHTML,
+      'html': parseHTML,
+      'vue': parseVueTemplate,
+      'javascript': parseJSX,
+      'javascriptreact': parseJSX,
+      'typescriptreact': parseJSX
+    };
+    const parseFn = parseFnMap[languageId] || parseHTML;
+    const classTree = parseFn(selectedText);
+    const { bem, insertBottom } = vscode.workspace.getConfiguration('nest');
+    // 生成 嵌套结构
+    let generateFn;
+    if (['sass', 'less'].includes(styleLang)) {
+      generateFn = bem ? generateBemShorthandSass : generateSassNesting;
+    } else if (styleLang === 'css') {
+      const formatOptions: vscode.QuickPickItem[] = [
+        { label: 'CSS (层级结构)', description: '生成带父子层级关系的CSS' },
+        { label: 'CSS (平铺结构)', description: '生成单一的CSS结构' },
+      ];
+      const selected: vscode.QuickPickItem = await quickPick(formatOptions);
+      if (!selected) return message.warning('未选择输出格式');
+      generateFn = selected.label === 'CSS (层级结构)' ? generateHierarchicalCss : generateClassStructure;
+    } else if (styleLang === 'stylus') {
+      generateFn = generateStylusNesting;
+    }
+    let output = generateFn(classTree);
+    if (insertBottom) {
+      if (languageId === 'vue') {
+        // 生成的代码注入到Vue文件底部
+        await injectStylesToVue(document, output, editor, styleLang);
+        message.success('生成的代码 已注入到 Vue 文件');
+      } else {
+        message.error(`自动注入到文件末端功能仅限vue文件`);
+      }
+    } else {
+      const langMap = {
+        'sass': 'scss',
+        'less': 'less',
+        'stylus': 'stylus',
+        'css': 'css'
+      };
+      // 创建新文档显示结果
+      vscode.workspace.openTextDocument({
+        content: output,
+        language: langMap[styleLang]
+      }).then(doc => {
+        vscode.window.showTextDocument(doc);
+      });
+      message.success('class 提取成功!');
+    } 
   } catch (error: any) {
-    vscode.window.showErrorMessage(`提取class结构失败: ${error.message}`)
-    return null
+    message.error(`提取class结构失败: ${error.message}`);
   }
 }
+
+// 剪切板转换
+const clipboardFn = async (mode: typeof CLIPBOARD_TYPES[number]) => {
+  try {
+    // ctrl+shift+c 从选中的代码中提取class，并转换之后写入剪切板，用户自行ctrl+v粘贴
+    // ctrl+shift+v 从用户copy的剪切板中拿代码提取class，并转换之后自动粘贴
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      return message.error('编辑器不可用!');
+    }
+    const selection = editor.selection;
+    const document = editor.document;
+    let selectedText = ''
+    let languageId = '';
+    if (mode === 'copy') {
+      languageId = document.languageId;
+      selectedText = document.getText(selection);
+    } else if(mode === 'paste') {
+      selectedText = await vscode.env.clipboard.readText();
+      if (!selectedText.trim()) {
+        return message.warning('剪贴板内容为空!');
+      }
+      languageId = detectCodeType(selectedText);
+      if (languageId === 'unknown') {
+        return message.warning('无法识别剪贴板中的代码类型!');
+      }
+    }
+    if (!hasClassAttributes(selectedText)) {
+      return message.warning('选中的代码不包含可提取的class属性');
+    }
+    // 根据文件类型选择合适的解析器
+    const parseFnMap = {
+      'htm': parseHTML,
+      'html': parseHTML,
+      'vue': parseVueTemplate,
+      'javascript': parseJSX,
+      'react': parseJSX,
+      'javascriptreact': parseJSX,
+      'typescriptreact': parseJSX
+    };
+    const parseFn = parseFnMap[languageId] || parseHTML;
+    const classTree = parseFn(selectedText);
+    const { clipboardFormat‌ } = vscode.workspace.getConfiguration('nest');
+    // 生成 嵌套结构
+    let generateFn;
+    switch (clipboardFormat‌) {
+      case 'Sass':
+      case 'Less':
+        generateFn = generateSassNesting;
+        break;
+      
+      case 'Sass &':
+      case 'Less &':
+        generateFn = generateBemShorthandSass;
+        break;
+      
+      case 'Stylus':
+        generateFn = generateStylusNesting;
+        break;
+      
+      case 'CSS with Parent-Child':
+        generateFn = generateHierarchicalCss;
+        break;
+      
+      case 'CSS with Single Layer':
+        generateFn = generateClassStructure;
+        break;
+    
+      default:
+        generateFn = generateSassNesting;
+        break;
+    }
+    let output = generateFn(classTree);
+    if (mode === 'copy') {
+      await vscode.env.clipboard.writeText(output);
+      message.success('class结构已写入剪切板，请在指定的位置ctrl+v粘贴')
+    }else if (mode === 'paste') {
+      const { activeTextEditor } = vscode.window;
+      activeTextEditor?.edit(editBuilder => { 
+        // const position = editor.selection.active;
+        // editBuilder.insert(position, output);
+        const { character, line } = activeTextEditor.selection.active;
+        editBuilder.replace(activeTextEditor.selection,  output.replace(/\n/g, `\n${' '.repeat(character)}`));
+      });
+      message.success('已自动粘贴生成的class结构!');
+    }
+  } catch (error: any) {
+    message.error(`注入class结构失败: ${error.message}`);
+  }
+}
+
+const previewFun = async (context: vscode.ExtensionContext) => { 
+  // 使用 Webview 面板管理类显示预览
+  const editor = vscode.window.activeTextEditor;
+  const selection = editor.selection
+  const selectedText = editor.document.getText(selection)
+  const languageId = editor.document.languageId
+  if (!editor) {
+    return message.error('编辑器不可用!');
+  }
+  // 检查是否包含 class 属性
+  if (!hasClassAttributes(selectedText)) {
+    return message.warning('选中的代码不包含可提取的class属性');
+  }
+
+  SassPreviewPanel.createOrShow(context, selectedText, languageId);
+}
+
 /**
  * 插件激活时调用此方法
  * @param {vscode.ExtensionContext} context
  */
-
 function activate(context: vscode.ExtensionContext) {
-  // 输出到编辑器命令
-  const extractCommand = vscode.commands.registerCommand(
-    'auto-css-nest.classExtractor',
-    async () => {
-      const sassOutput = await generateSass()
-      if (!sassOutput) return
-
-      vscode.workspace
-        .openTextDocument({
-          content: sassOutput,
-          language: 'scss',
-        })
-        .then((doc) => {
-          vscode.window.showTextDocument(doc)
-        })
-    }
-  )
-
-  // 预览在 Webview命令
-  const previewCommand = vscode.commands.registerCommand(
-    'auto-css-nest.previewInWebview',
-    async () => {
-      console.log('previewInWebview')
-      const sassOutput = await generateSass()
-      if (!sassOutput) return
-      // 使用 Webview 面板管理类显示预览
-      const editor = vscode.window.activeTextEditor
-      const selection = editor.selection
-      const selectedText = editor.document.getText(selection)
-      SassPreviewPanel.createOrShow(context, selectedText, sassOutput);
-     
-  )
-  context.subscriptions.push(extractCommand, previewCommand)
+  const commands = installCommands(STYLE_LANG_TYPES, extractorFn).concat(installCommands(CLIPBOARD_TYPES, clipboardFn)).concat(installCommands(PREVIEW_WEBVIEW, () => previewFun(context)));
+  [].push.apply(context.subscriptions, commands);
 }
 
 // 插件卸载时调用此方法
-function deactivate() {
-  console.log('卸载')
+function deactivate() { 
+  console.log('卸载');
 }
 
-export { activate, deactivate }
+export { activate, deactivate };
