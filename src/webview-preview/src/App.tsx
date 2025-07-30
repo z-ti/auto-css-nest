@@ -62,11 +62,12 @@ function App() {
           <Col span={11}>
             <Title level={4}>生成的css</Title>
             <div className="container-border">
+              {/* ['sass', 'less', 'stylus', 'css'] */}
               <Radio.Group onChange={onCssTypeChange} value={cssType}>
-                <Radio value={1}>&-xxx连接符</Radio>
-                <Radio value={2}>class非嵌套结构</Radio>
-                <Radio value={3}>sass嵌套结构</Radio>
-                <Radio value={4}>stylus结构</Radio>
+                <Radio value={'less'}>&-xxx连接符</Radio>
+                <Radio value={'css'}>class非嵌套结构</Radio>
+                <Radio value={'sass'}>sass嵌套结构</Radio>
+                <Radio value={'stylus'}>stylus结构</Radio>
               </Radio.Group>
               <pre>
                 <code> {sassContent}</code>
