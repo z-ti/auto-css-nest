@@ -26,7 +26,7 @@ const extractorFn = async (styleLang: typeof STYLE_LANG_TYPES[number]) => {
   try {
     // 根据文件类型选择合适的解析器
     const languageId = document.languageId;
-    const parseFnMap = {
+    const parseFnMap: Record<string, Function> = {
       'htm': parseHTML,
       'html': parseHTML,
       'vue': parseVueTemplate,
@@ -62,7 +62,7 @@ const extractorFn = async (styleLang: typeof STYLE_LANG_TYPES[number]) => {
         message.error(`自动注入到文件末端功能仅限vue文件`);
       }
     } else {
-      const langMap = {
+      const langMap: Record<string, string> = {
         'sass': 'scss',
         'less': 'less',
         'stylus': 'stylus',
