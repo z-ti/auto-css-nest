@@ -11,6 +11,7 @@ export function parseJSX(code: string): ClassNode {
   let inClassName = false;
   let inString = false;
   let quoteChar = '';
+  let isComment = false;
 
   for (let i = 0; i < code.length; i++) {
     const char = code[i];
@@ -31,8 +32,10 @@ export function parseJSX(code: string): ClassNode {
 
     switch (char) {
       case '<':
-        // 处理自闭合标签
-        if (code[i + 1] === '/') {
+        if (isComment) {
+          break;
+        }
+        if (code[i + 1] === '/') { // 处理正常闭合标签
           depth--;
           if (stack.length > 1) stack.pop();
         } else {
@@ -46,6 +49,13 @@ export function parseJSX(code: string): ClassNode {
         break;
 
       case '>':
+        if (isComment) {
+          break;
+        }
+        if (code[i - 1] === '/') { // 处理自闭合标签
+          depth--;
+          if (stack.length > 1) stack.pop();
+        }
         inTag = false;
         break;
 
@@ -64,6 +74,18 @@ export function parseJSX(code: string): ClassNode {
           inString = true;
           quoteChar = char;
           currentText = char;
+        }
+        break;
+
+      case '{':
+        if (code[i + 1] === '/' && code[i + 2] === '*') { // 注释开始
+          isComment = true;
+        }
+        break;
+
+      case '}':
+        if (code[i - 1] === '/' && code[i - 2] === '*') { // 注释结束
+          isComment = false;
         }
         break;
     }
