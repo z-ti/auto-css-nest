@@ -43,7 +43,8 @@
       {
         "command": "auto-css-nest.previewExtractor",
         "title": "Preview In Webview",
-        "category": "Auto CSS Nest"
+        "category": "Auto CSS Nest",
+        "icon": "images/css.png"
       },
       {
         "command": "auto-css-nest.cssExtractor",
@@ -97,7 +98,19 @@
       }
     ],
     "menus": {
+      "editor/title": [
+				{
+					"command": "auto-css-nest.previewExtractor",
+					"group": "navigation"
+				}
+			],
       "editor/context": [
+        {
+          "submenu": "auto-css-nest.submenu",
+          "group": "AutoCSSNest@1"
+        }
+      ],
+      "auto-css-nest.submenu": [
         {
           "command": "auto-css-nest.sassExtractor",
           "when": "editorHasSelection",
@@ -106,36 +119,30 @@
         {
           "command": "auto-css-nest.cssExtractor",
           "when": "editorHasSelection",
-          "group": "AutoCSSNest@1"
+          "group": "AutoCSSNest@2"
         },
         {
           "command": "auto-css-nest.stylusExtractor",
           "when": "editorHasSelection",
-          "group": "AutoCSSNest@1"
+          "group": "AutoCSSNest@4"
         },
         {
           "command": "auto-css-nest.lessExtractor",
           "when": "editorHasSelection",
-          "group": "AutoCSSNest@1"
+          "group": "AutoCSSNest@3"
         },
         {
           "command": "auto-css-nest.copyExtractor",
           "when": "editorHasSelection",
-          "group": "AutoCSSNest@2"
+          "group": "Clipboard@1"
         },
         {
           "command": "auto-css-nest.pasteExtractor",
-          "group": "AutoCSSNest@2"
+          "group": "Clipboard@2"
         },
         {
-          "submenu": "auto-css-nest.submenu",
-          "group": "AutoCSSNest@1",
-          "when": "editorHasSelection"
-        }
-      ],
-      "auto-css-nest.submenu": [
-        {
           "command": "auto-css-nest.previewExtractor",
+          "when": "editorHasSelection",
           "group": "2_preview"
         }
       ]
@@ -143,7 +150,7 @@
     "submenus": [
       {
         "id": "auto-css-nest.submenu",
-        "label": "Auto CSS Nest",
+        "label": "🎉Auto CSS Nest",
         "icon": "$(css)"
       }
     ],
