@@ -14,6 +14,8 @@ const vscode = acquireVsCodeApi()
 function App() {
   const { Title } = Typography
   const [cssType, setValue] = useState('less')
+  const [sassContent, setSassPreContent] = useState<string | null>('')
+  const [domContent, setDomPreContent] = useState<string | null>('')
   const onCssTypeChange = (e: RadioChangeEvent) => {
     setValue(e.target.value)
     setSassPreContent('')
@@ -25,9 +27,6 @@ function App() {
       cssType,
     })
   }
-
-  const [sassContent, setSassPreContent] = useState<string | null>(null)
-  const [domContent, setDomPreContent] = useState<string | null>(null)
 
   useEffect(() => {
     //首次默认向插件发送一次消息获取dom和生成sass
